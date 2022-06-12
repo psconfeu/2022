@@ -1,9 +1,12 @@
 #region params
 $result = [System.Collections.ArrayList]::new()
 $appName = "Notepad++"
+$encodedAppName = [System.Web.HttpUtility]::UrlEncode($appName)
 $groupId = 'd20a418e-a00f-47a5-a8ed-e12a9d98f83a'
-$baseGraphUri = 'https://graph.microsoft.com/beta/'
-$script:authHeader = @{Authorization = "Bearer $((Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com/").Token)"}
+$baseGraphUri = 'https://graph.microsoft.com/beta'
+#$script:authHeader = @{Authorization = "Bearer $((Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com/").Token)"}
+$auth = Get-MsalToken -ClientId "eeaa83bc-9a4a-4e3d-aada-87b78e1dfc93" -ClientSecret ('IuG8Q~AFLpTa5.ZCtFefV9wgtq2Wcsix3QTrMaqP' | ConvertTo-SecureString -AsPlainText -Force) -TenantId 'powers-hell.com'
+$script:authHeader = @{Authorization = $auth.CreateAuthorizationHeader() }
 #endregion
 
 #region functions
@@ -50,6 +53,9 @@ function Format-Result {
         [string]$DeviceID,
 
         [parameter(Mandatory = $true)]
+        [string]$DeviceName,
+
+        [parameter(Mandatory = $true)]
         [bool]$IsCompliant,
 
         [parameter(Mandatory = $true)]
@@ -61,6 +67,7 @@ function Format-Result {
     )
     $result = [PSCustomObject]@{
         DeviceID    = $DeviceID
+        DeviceName  = $DeviceName
         IsCompliant = $IsCompliant
         IsMember    = $IsMember
         Action      = $Action
@@ -68,3 +75,52 @@ function Format-Result {
     return $result
 }
 #endregion
+
+#region Get existing group members
+$graphUri = "$baseGraphUri/groups/$groupId/members"
+$groupMembers = Invoke-GraphCall -Uri $graphUri
+#endregion
+
+#region Get devices with notepad++ installed
+$detectedAppsBaseUri = "$baseGraphUri/deviceManagement/detectedApps"
+$daItem = (Invoke-GraphCall -Uri "$($detectedAppsBaseUri)?`$filter=(contains(displayName,'$([System.Web.HttpUtility]::UrlEncode($encodedAppName))'))").value
+if ($daItem.deviceCount -gt 0) {
+    $detectedDevices = (Invoke-GraphCall -Uri "$detectedAppsBaseUri/$($daItem.id)/managedDevices").value | Select-Object id, deviceName
+    foreach ($device in $detectedDevices) {
+        #region Swap the detected device for Intune + AAD object from Intune object
+        $intuneDevice = Invoke-GraphCall -Uri "$baseGraphUri/deviceManagement/managedDevices/$($device.id)"
+        $aadDevice = (Invoke-GraphCall -Uri "$baseGraphUri/devices?`$filter=(deviceId eq '$($intuneDevice.azureADDeviceId)')").value
+        $device | Add-Member -MemberType NoteProperty -Name "deviceId" -Value $aadDevice.deviceId
+        #endregion
+        #region add devices
+        if ($groupMembers.value.deviceId -notcontains $aadDevice.deviceId) {
+            #region Device not in group and has software
+            $graphUri = "$baseGraphUri/groups/$groupId/members/`$ref"
+            $body = @{"@odata.id" = "$baseGraphUri/directoryObjects/$($aadDevice.id)" }
+            Invoke-GraphCall -Uri $graphUri -Method Post -Body $body
+            $result.Add($(Format-Result -DeviceId $device.deviceId -DeviceName $device.deviceName -IsCompliant $true -IsMember $true -Action Added)) | Out-Null
+            #endregion
+        }
+        else {
+            #region device is compliant and already a member
+            $result.Add($(Format-Result -DeviceId $device.deviceId -DeviceName $device.deviceName -IsCompliant $true -IsMember $true -Action NoActionTaken)) | Out-Null
+            #endregion
+        }
+        #endregion
+    }
+    #region Remove devices
+    $devicesToRemove = $groupMembers.value | Where-Object { $_.deviceId -notIn $detectedDevices.deviceId}
+    if ($devicesToRemove.count -gt 0) {
+        foreach ($dtr in $devicesToRemove){
+            #region Device found in group, but doesnt have software.
+            $graphUri = "$baseGraphUri/groups/$groupId/members/$($dtr.id)/`$ref"
+            Invoke-GraphCall -Uri $graphUri -Method Delete
+            $result.Add($(Format-Result -DeviceId $dtr.deviceId -DeviceName $dtr.displayName -IsCompliant $false -IsMember $false -Action Removed)) | Out-Null
+            #endregion
+        }
+        
+    }
+    #endregion
+}
+#endregion
+$result
