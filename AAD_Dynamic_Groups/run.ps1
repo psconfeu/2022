@@ -5,7 +5,7 @@ $encodedAppName = [System.Web.HttpUtility]::UrlEncode($appName)
 $groupId = 'd20a418e-a00f-47a5-a8ed-e12a9d98f83a'
 $baseGraphUri = 'https://graph.microsoft.com/beta'
 #$script:authHeader = @{Authorization = "Bearer $((Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com/").Token)"}
-$auth = Get-MsalToken -ClientId "eeaa83bc-9a4a-4e3d-aada-87b78e1dfc93" -ClientSecret ('IuG8Q~AFLpTa5.ZCtFefV9wgtq2Wcsix3QTrMaqP' | ConvertTo-SecureString -AsPlainText -Force) -TenantId 'powers-hell.com'
+$auth = Get-MsalToken -ClientId "eeaa83bc-9a4a-4e3d-aada-87b78e1dfc93" -ClientSecret ('1234' | ConvertTo-SecureString -AsPlainText -Force) -TenantId 'powers-hell.com'
 $script:authHeader = @{Authorization = $auth.CreateAuthorizationHeader() }
 #endregion
 
