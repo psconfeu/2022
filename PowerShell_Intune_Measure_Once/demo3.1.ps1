@@ -29,7 +29,7 @@ function Send-TeamsMessage {
         [string]$UrlToScript
     )
     try {
-        $teamsUri = "https://intunetraining.webhook.office.com/webhookb2/c5a873c6-1177-4fe8-b2cc-81c8df8d3371@f7b5c879-0a00-4aec-b5a2-4dde5ba79aa4/IncomingWebhook/e820256d12554fb897bb43b34107d2bb/a2b838de-151d-45a0-88c4-11932b54f611"
+        $teamsUri = "https://intunetraining.webhook.office.com/webhookb2/ABCDEFG"
         $json = @"
             {
     "type": "message",
