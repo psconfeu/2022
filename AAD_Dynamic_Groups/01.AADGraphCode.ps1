@@ -4,9 +4,14 @@ $appName = "Notepad++"
 $encodedAppName = [System.Web.HttpUtility]::UrlEncode($appName)
 $groupId = 'd20a418e-a00f-47a5-a8ed-e12a9d98f83a'
 $baseGraphUri = 'https://graph.microsoft.com/beta'
-#$script:authHeader = @{Authorization = "Bearer $((Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com/").Token)"}
-$auth = Get-MsalToken -ClientId "eeaa83bc-9a4a-4e3d-aada-87b78e1dfc93" -ClientSecret ('123' | ConvertTo-SecureString -AsPlainText -Force) -TenantId 'powers-hell.com'
-$script:authHeader = @{Authorization = $auth.CreateAuthorizationHeader() }
+$env:appId = ''
+$env:secret = ''
+$env:tenant = ''
+
+$cred = (New-Object System.Management.Automation.PSCredential $env:appId, ($env:secret | ConvertTo-SecureString -AsPlainText -Force))
+Connect-AzAccount -ServicePrincipal -Credential $cred -Tenant $env:tenant | Out-Null
+$token = (Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token
+$script:authHeader = @{Authorization = "Bearer $token" }
 #endregion
 
 #region functions
