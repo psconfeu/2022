@@ -551,7 +551,7 @@ New-GuestConfigurationPolicy `
 
  #>
 
- $assignment = Get-AzPolicyAssignment -PolicyDefinitionId $Policy.PolicyDefinitionId | Where-Object Name -eq "[Windows]Get PowerShell version"
+ $assignment = Get-AzPolicyAssignment -PolicyDefinitionId $PolicyDefinition.PolicyDefinitionId | Where-Object Name -eq "[Windows]Get PowerShell version"
 
  # Guest Configuration Resource Contributor
  $PolicyDefinition = Get-AzPolicyDefinition -Name fd41ee42-a0f8-4d22-ad49-2990084ea791
