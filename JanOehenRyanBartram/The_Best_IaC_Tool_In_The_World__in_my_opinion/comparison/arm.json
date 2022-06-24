@@ -1,0 +1,244 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[deployment().location]"
+    }
+  },
+  "variables": {
+    "resourceGroupName": "arm-static-web-app"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[variables('resourceGroupName')]",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "storageWebDeploy",
+      "resourceGroup": "[variables('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "skuName": {
+            "value": "Standard_LRS"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "accountName": {
+            "value": "rbarmstweb"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "accountName": {
+              "type": "string"
+            },
+            "skuName": {
+              "type": "string",
+              "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS",
+                "Premium_LRS"
+              ]
+            },
+            "deploymentScriptTimestamp": {
+              "type": "string",
+              "defaultValue": "[utcNow()]"
+            },
+            "indexDocument": {
+              "type": "string",
+              "defaultValue": "index.html"
+            },
+            "errorDocument404Path": {
+              "type": "string",
+              "defaultValue": "404.html"
+            }
+          },
+          "variables": {
+            "indexhtml": "<html>\r\n\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Hello, Pulumi!</title>\r\n    <link href=\"favicon.png\" rel=\"icon\" type=\"image/png\" />\r\n</head>\r\n\r\n<body>\r\n    <h1>Hello, Azure!</h1>\r\n    <p>Made with ❤️ with <a href=\"https://pulumi.com\">Pulumi</a></p>\r\n    <p>This file is served from Azure Blob Storage.</p>\r\n</body>\r\n\r\n</html>\r\n",
+            "404html": "<html>\r\n\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>Oops, 404</title>\r\n  <link href=\"favicon.png\" rel=\"icon\" type=\"image/png\" />\r\n</head>\r\n\r\n<body>\r\n  <h1>That's a 404! Still, from the Blob Storage.</h1>\r\n  <p>Made with ❤️ with <a href=\"https://pulumi.com\">Pulumi</a></p>\r\n</body>\r\n\r\n</html>\r\n",
+            "storageAccountContributorRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+            "storageBlobDataContributorRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+            "filesArray": [
+              {
+                "content": "[variables('indexhtml')]",
+                "name": "index.html",
+                "type": "text/html"
+              },
+              {
+                "content": "[variables('404html')]",
+                "name": "404.html",
+                "type": "text/html"
+              }
+            ]
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2019-06-01",
+              "name": "[parameters('accountName')]",
+              "location": "[parameters('location')]",
+              "kind": "StorageV2",
+              "sku": {
+                "name": "[parameters('skuName')]"
+              },
+              "properties": {}
+            },
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "apiVersion": "2018-11-30",
+              "name": "DeploymentScriptMSIArm",
+              "location": "[parameters('location')]"
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('accountName'))]",
+              "name": "[guid(resourceGroup().id, variables('storageAccountContributorRoleDefinitionId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('storageAccountContributorRoleDefinitionId')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')).principalId]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('accountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('accountName'))]",
+              "name": "[guid(resourceGroup().id, variables('storageBlobDataContributorRoleDefinitionId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('storageBlobDataContributorRoleDefinitionId')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')).principalId]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('accountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "deploymentScriptPwsh",
+              "location": "[parameters('location')]",
+              "kind": "AzurePowerShell",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm'))]": {}
+                }
+              },
+              "properties": {
+                "azPowerShellVersion": "3.0",
+                "scriptContent": "param(\r\n    [string] $ResourceGroupName,\r\n    [string] $StorageAccountName,\r\n    [string] $IndexDocument,\r\n    [string] $ErrorDocument404Path)\r\n\r\n$ErrorActionPreference = 'Stop'\r\n$storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $StorageAccountName\r\n\r\n$ctx = $storageAccount.Context\r\nEnable-AzStorageStaticWebsite -Context $ctx -IndexDocument $IndexDocument -ErrorDocument404Path $ErrorDocument404Path\r\n",
+                "forceUpdateTag": "[parameters('deploymentScriptTimestamp')]",
+                "retentionInterval": "PT4H",
+                "arguments": "[format('-ResourceGroupName {0} -StorageAccountName {1} -IndexDocument {2} -ErrorDocument404Path {3}', resourceGroup().name, parameters('accountName'), parameters('indexDocument'), parameters('errorDocument404Path'))]"
+              },
+              "dependsOn": [
+                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('accountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, variables('storageAccountContributorRoleDefinitionId')))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('accountName'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "deploymentScriptAzCli",
+                "count": "[length(variables('filesArray'))]"
+              },
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "[format('deployscript-upload-blob-{0}', variables('filesArray')[copyIndex()].name)]",
+              "location": "[parameters('location')]",
+              "kind": "AzureCLI",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm'))]": {}
+                }
+              },
+              "properties": {
+                "azCliVersion": "2.26.1",
+                "timeout": "PT5M",
+                "retentionInterval": "PT1H",
+                "environmentVariables": [
+                  {
+                    "name": "AZURE_STORAGE_ACCOUNT",
+                    "value": "[parameters('accountName')]"
+                  },
+                  {
+                    "name": "AZURE_STORAGE_KEY",
+                    "secureValue": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('accountName')), '2019-06-01').keys[0].value]"
+                  },
+                  {
+                    "name": "CONTENT",
+                    "value": "[ variables('filesArray')[copyIndex()].content]"
+                  },
+                  {
+                    "name": "NAME",
+                    "value": "[ variables('filesArray')[copyIndex()].name]"
+                  },
+                  {
+                    "name": "TYPE",
+                    "value": "[ variables('filesArray')[copyIndex()].type]"
+                  },
+                  {
+                    "name": "CONTAINER",
+                    "value": "$web"
+                  }
+                ],
+                "scriptContent": "echo \"$CONTENT\" > $NAME && az storage blob upload -f $NAME -c $CONTAINER -n $NAME --content-type $TYPE"
+              },
+              "dependsOn": [
+                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('accountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, variables('storageBlobDataContributorRoleDefinitionId')))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'DeploymentScriptMSIArm')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('accountName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "test": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('accountName'))).primaryEndpoints.web]"
+            },
+            "primarykey": {
+              "type": "string",
+              "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('accountName')), '2019-06-01').keys[0].value]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "test": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'storageWebDeploy')).outputs.test.value]"
+    },
+    "primarykey": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('resourceGroupName')), 'Microsoft.Resources/deployments', 'storageWebDeploy')).outputs.primarykey.value]"
+    }
+  }
+}
