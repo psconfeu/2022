@@ -1,0 +1,123 @@
+{
+    "$schema": "https://raw.githubusercontent.com/PowerShell/Crescendo/master/Microsoft.PowerShell.Crescendo/schemas/2021-11",
+    "Commands": [
+        {
+            "Verb": "Invoke",
+            "Noun": "TerraformInit",
+            "OriginalName": "terraform",
+            "OriginalCommandElements": [
+                "init",
+                "--input=false"
+            ],
+            "Parameters": [
+                {
+                    "OriginalName": "--backend=false",
+                    "Name": "NoBackend",
+                    "ParameterType": "Switch",
+                    "OriginalPosition": 0,
+                    "Description": "Ignore backend configuration"
+                },
+                {
+                    "OriginalName": "--reconfigure",
+                    "Name": "Reconfigure",
+                    "ParameterType": "Switch",
+                    "OriginalPosition": 1,
+                    "Description": "Reload all providers"
+                },
+                {
+                    "OriginalName": "--upgrade",
+                    "Name": "Upgrade",
+                    "ParameterType": "Switch",
+                    "OriginalPosition": 1,
+                    "Description": "Upgrade providers in lock file to criteria defined in provider"
+                }
+            ]
+        },
+        {
+            "Verb": "Get",
+            "Noun": "TerraformPlan",
+            "OriginalName": "terraform",
+            "OriginalCommandElements": [
+                "plan",
+                "--json",
+                "--input=false"
+            ],
+            "Parameters": [
+                {
+                    "OriginalName": "--var-file=",
+                    "Name": "VariableFile",
+                    "ParameterType": "System.IO.FileInfo",
+                    "OriginalPosition": 0,
+                    "NoGap": true,
+                    "Description": "Path to a terraform variable file"
+                },
+                {
+                    "OriginalName": "--out=",
+                    "Name": "OutPath",
+                    "ParameterType": "System.IO.DirectoryInfo",
+                    "OriginalPosition": 1,
+                    "NoGap": true,
+                    "Description": "Path where the plan file should be output to"
+                },
+                {
+                    "OriginalName": "--destroy",
+                    "Name": "Destroy",
+                    "ParameterType": "Switch",
+                    "OriginalPosition": 2,
+                    "ParameterSetName": [
+                        "Destroy"
+                    ],
+                    "Description": "Plan for destroying all the things"
+                }
+            ],
+            "OutputHandlers": [
+                {
+                    "ParameterSetName": "Default",
+                    "HandlerType": "Inline",
+                    "Handler": "$args[0] | ConvertFrom-Json | Where-Object type -eq 'planned_change' | Select-Object -ExpandProperty change"
+                },
+                {
+                    "ParameterSetName": "Destroy",
+                    "HandlerType": "Inline",
+                    "Handler": "Write-Host ('{0}You selected destroy, this will delete all your stuff:{1}' -f $PSStyle.Foreground.red, $PSStyle.Reset);$args[0] | ConvertFrom-Json | Where-Object type -eq 'planned_change' | Select-Object -ExpandProperty change"
+                }
+            ]
+        },
+        {
+            "Verb": "Start",
+            "Noun": "TerraformApply",
+            "OriginalName": "terraform",
+            "OriginalCommandElements": [
+                "apply",
+                "--json",
+                "--input=false",
+                "--auto-approve"
+            ],
+            "Parameters": [
+                {
+                    "OriginalName": "--var-file=",
+                    "Name": "VariableFile",
+                    "ParameterType": "System.IO.FileInfo",
+                    "OriginalPosition": 0,
+                    "NoGap": true,
+                    "Description": "Path to a terraform variable file"
+                },
+                {
+                    "OriginalName": "",
+                    "Name": "PlanfilePath",
+                    "ParameterType": "System.IO.FileInfo",
+                    "OriginalPosition": 1,
+                    "Description": "Path where a previously created plan file is stored"
+                }
+            ],
+            "OutputHandlers": [
+                {
+                    "ParameterSetName": "Default",
+                    "HandlerType": "Function",
+                    "StreamOutput": true,
+                    "Handler": "ParseTerraformApply"
+                }
+            ]
+        }
+    ]
+}
