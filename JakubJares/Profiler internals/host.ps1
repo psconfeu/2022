@@ -1,0 +1,1 @@
+$host.UI.GetType() | Format-Table Name, BaseType
