@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "ms-azuretools.vscode-azurefunctions",
+    "ms-vscode.powershell-preview",
+    "ms-vscode.azure-account",
+    "Azurite.azurite"
+  ]
+}
