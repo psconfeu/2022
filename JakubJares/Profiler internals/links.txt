@@ -1,0 +1,14 @@
+Sources from presentation are in: 
+
+PowerShell: 
+
+https://github.com/PowerShell/PowerShell
+
+https://github.com/PowerShell/PowerShell/blob/7dc4587014bfa22919c933607bf564f0ba53db2e/src/System.Management.Automation/engine/EngineIntrinsics.cs#L36
+https://github.com/PowerShell/PowerShell/blob/7dc4587014bfa22919c933607bf564f0ba53db2e/src/System.Management.Automation/engine/debugger/debugger.cs#L979
+
+
+Profiler:
+
+https://github.com/nohwnd/Profiler
+C# solution: https://github.com/nohwnd/Profiler/tree/main/csharp

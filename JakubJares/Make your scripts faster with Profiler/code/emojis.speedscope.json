@@ -1,0 +1,408 @@
+{
+  "exporter": "Profiler@4.0.0",
+  "name": "emojis.speedscope.json",
+  "activeProfileIndex": 0,
+  "schema": "https://www.speedscope.app/file-format-schema.json",
+  "shared": {
+    "frames": [
+      {
+        "name": "{|X:\\demo1\\Trace.ps1"
+      },
+      {
+        "name": "& \"$PSScriptRoot/Get-Icons.ps1\""
+      },
+      {
+        "name": "Import-Module $PSScriptRoot\\Avocado.psm1 -Force"
+      },
+      {
+        "name": "Export-ModuleMember -Function Get-Avocado, Get-Unicorn"
+      },
+      {
+        "name": "Get-Icons"
+      },
+      {
+        "name": "Get-Avocado"
+      },
+      {
+        "name": "Get-EmojiInternal"
+      },
+      {
+        "name": "Get-Unicorn"
+      },
+      {
+        "name": "}|X:\\demo1\\Trace.ps1"
+      }
+    ]
+  },
+  "profiles": [
+    {
+      "type": "evented",
+      "name": "pwsh (9584) Time=802.6877ms",
+      "unit": "milliseconds",
+      "startValue": 0,
+      "endValue": 802.6877,
+      "events": [
+        {
+          "at": 0.0,
+          "frame": 0,
+          "type": "O"
+        },
+        {
+          "at": 0.006,
+          "frame": 0,
+          "type": "C"
+        },
+        {
+          "at": 0.006,
+          "frame": 1,
+          "type": "O"
+        },
+        {
+          "at": 5.4323,
+          "frame": 2,
+          "type": "O"
+        },
+        {
+          "at": 10.8785,
+          "frame": 3,
+          "type": "O"
+        },
+        {
+          "at": 11.2531,
+          "frame": 3,
+          "type": "C"
+        },
+        {
+          "at": 11.2531,
+          "frame": 4,
+          "type": "O"
+        },
+        {
+          "at": 11.3293,
+          "frame": 4,
+          "type": "O"
+        },
+        {
+          "at": 11.3363,
+          "frame": 4,
+          "type": "C"
+        },
+        {
+          "at": 11.3363,
+          "frame": 4,
+          "type": "C"
+        },
+        {
+          "at": 11.3363,
+          "frame": 4,
+          "type": "O"
+        },
+        {
+          "at": 11.3932,
+          "frame": 5,
+          "type": "O"
+        },
+        {
+          "at": 11.3998,
+          "frame": 5,
+          "type": "C"
+        },
+        {
+          "at": 11.3998,
+          "frame": 5,
+          "type": "O"
+        },
+        {
+          "at": 11.4636,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 11.4712,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 11.4712,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 11.4816,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 11.4816,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 11.4925,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 11.4925,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 11.5166,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 11.5166,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 363.2085,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 363.2085,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 363.2375,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 363.2375,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.1659,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.1659,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.2418,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.2418,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.2739,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.2739,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.306,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.306,
+          "frame": 5,
+          "type": "O"
+        },
+        {
+          "at": 387.3277,
+          "frame": 5,
+          "type": "C"
+        },
+        {
+          "at": 387.3277,
+          "frame": 5,
+          "type": "C"
+        },
+        {
+          "at": 387.3277,
+          "frame": 4,
+          "type": "O"
+        },
+        {
+          "at": 387.5641,
+          "frame": 7,
+          "type": "O"
+        },
+        {
+          "at": 387.5795,
+          "frame": 7,
+          "type": "C"
+        },
+        {
+          "at": 387.5795,
+          "frame": 4,
+          "type": "C"
+        },
+        {
+          "at": 387.5795,
+          "frame": 7,
+          "type": "O"
+        },
+        {
+          "at": 387.7295,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.7453,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.7453,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.7627,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.7627,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.781,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.781,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 387.8159,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 387.8159,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 784.8427,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 784.8427,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 784.8756,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 784.8756,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 802.4711,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 802.4711,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 802.5381,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 802.5381,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 802.5758,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 802.5758,
+          "frame": 6,
+          "type": "O"
+        },
+        {
+          "at": 802.6121,
+          "frame": 6,
+          "type": "C"
+        },
+        {
+          "at": 802.6121,
+          "frame": 7,
+          "type": "O"
+        },
+        {
+          "at": 802.632,
+          "frame": 7,
+          "type": "C"
+        },
+        {
+          "at": 802.632,
+          "frame": 7,
+          "type": "C"
+        },
+        {
+          "at": 802.632,
+          "frame": 4,
+          "type": "O"
+        },
+        {
+          "at": 802.658,
+          "frame": 4,
+          "type": "C"
+        },
+        {
+          "at": 802.658,
+          "frame": 4,
+          "type": "C"
+        },
+        {
+          "at": 802.658,
+          "frame": 8,
+          "type": "O"
+        },
+        {
+          "at": 802.6877,
+          "frame": 8,
+          "type": "C"
+        },
+        {
+          "at": 802.6877,
+          "frame": 2,
+          "type": "C"
+        },
+        {
+          "at": 802.6877,
+          "frame": 1,
+          "type": "C"
+        }
+      ]
+    }
+  ]
+}
