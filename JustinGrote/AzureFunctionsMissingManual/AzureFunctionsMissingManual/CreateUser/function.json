@@ -1,0 +1,11 @@
+{
+  "scriptFile": "../AzureFunctionsMissingManual.psm1",
+  "entryPoint": "CreateUser",
+  "bindings": [
+    {
+      "name": "name",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}
