@@ -1,0 +1,13 @@
+New-UDDashboard -Title 'PowerShell Universal' -Content {
+        $File = Get-PSUCache -Key "Map"
+        [xml]$Xml = Get-Content $File -Raw
+
+        $Positions = @()
+        $xml.gpx.trk.trkseg.trkpt | ForEach-Object {
+            $Positions += , @($_.lat, $_.lon)
+        } 
+        New-UDMap -Endpoint {
+            New-UDMapRasterLayer -TileServer 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' 
+            New-UDMapVectorLayer -Polyline -Positions $Positions
+        } -Zoom 13 -Height '100vh' -Longitude -114.417249 -Latitude 43.593044
+    }

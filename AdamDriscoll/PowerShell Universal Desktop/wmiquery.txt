@@ -1,0 +1,1 @@
+TargetInstance isa "Win32_Process" and TargetInstance.Name = "pwsh.exe"

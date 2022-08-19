@@ -1,0 +1,5 @@
+[dateTime]$EndTime = '6/20/2022 5:30 PM' 
+$CurrentTime = Get-Date
+
+$TimeLeft = $EndTime - $CurrentTime
+New-BurntToastNotification -Text "You have $([Math]::Floor($TimeLeft.TotalMinutes)) minutes left!!"

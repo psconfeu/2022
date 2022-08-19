@@ -1,0 +1,1 @@
+﻿New-PSUProtocolHandler -Script "protocol.ps1" -Environment "Default" -Credential "Default" -Protocol "psu"

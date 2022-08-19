@@ -1,0 +1,1 @@
+﻿New-PSUSystemEvent -Script "systemEvent.ps1" -Environment "Default" -Credential "Default" -Type "Create" -Condition "TargetInstance isa `"Win32_Process`" and TargetInstance.Name = `"pwsh.exe`"" -Name "PowerShell Started"
