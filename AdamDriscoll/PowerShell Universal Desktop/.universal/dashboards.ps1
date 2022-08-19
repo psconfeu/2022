@@ -1,0 +1,2 @@
+﻿New-PSUDashboard -Name "Services" -FilePath "dashboards\Services\Services.ps1" -BaseUrl "/Services" -Framework "UniversalDashboard:Latest" -SessionTimeout 0 -AutoDeploy 
+New-PSUDashboard -Name "Launch" -FilePath "dashboards\Launch\Launch.ps1" -BaseUrl "/launch" -Framework "UniversalDashboard:Latest" -Authenticated -SessionTimeout 0 -AutoDeploy

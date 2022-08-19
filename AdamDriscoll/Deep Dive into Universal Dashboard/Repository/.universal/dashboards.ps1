@@ -1,0 +1,4 @@
+﻿New-PSUDashboard -Name "Dashboard" -FilePath "dashboards\Dashboard\Dashboard.ps1" -BaseUrl "/dashboard" -Framework "UniversalDashboard:Latest" -Authenticated -SessionTimeout 0 -AutoDeploy 
+New-PSUDashboard -Name "Chatroom" -FilePath "dashboards\Chatroom\Chatroom.ps1" -BaseUrl "/chatroom" -Framework "UniversalDashboard:Latest" -Authenticated -SessionTimeout 0 -AutoDeploy 
+New-PSUDashboard -Name "Integration" -FilePath "dashboards\Integration\Integration.ps1" -BaseUrl "/integration" -Framework "UniversalDashboard:Latest" -Authenticated -SessionTimeout 0 -AutoDeploy 
+New-PSUDashboard -Name "Components" -FilePath "dashboards\Components\Components.ps1" -BaseUrl "/components" -Framework "UniversalDashboard:Latest" -Authenticated -SessionTimeout 0 -AutoDeploy

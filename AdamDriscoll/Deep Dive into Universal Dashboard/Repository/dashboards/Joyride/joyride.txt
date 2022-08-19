@@ -1,0 +1,17 @@
+import-module C:\src\udjoyride\output\UniversalDashboard.Joyride.psd1
+
+New-UDDashboard -Title 'PowerShell Universal' -Content {
+    New-UDJoyride -Id 'joyride' -Step @(
+        New-UDJoyrideStep -Target '#alert' -Text 'Alerts are used to highlight text.'
+        New-UDJoyrideStep -Target '#card' -Text 'Cards highlight functional groups.'
+    ) 
+
+    New-UDButton -Text 'Start' -OnClick {
+        Set-UDElement -Id 'joyride' -Properties @{
+            run = $true
+        }
+    }
+
+    New-UDAlert -Id 'alert' -Text 'This is an alert!' 
+    New-UDCard -Id 'card' -Text 'This is a card!' -Title 'Card'
+}
