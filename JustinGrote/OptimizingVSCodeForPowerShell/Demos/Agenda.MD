@@ -5,10 +5,11 @@ It went pretty well! 👍✅🧪📝☝️🧪
 
 ```mermaid
 gantt
+dateFormat HH:mm
 title Presentation Agenda
 todayMarker off
 axisFormat %M
-👋✅Intro                       :done,      intro,    5pm,  5m
+👋✅Intro                       :done,      intro,    17:00,  5m
 🧜‍♀️Gists/Mermaid               :done,       mermaid,  after intro,      5m
 📝Editor Commands             :done,       escs,     after mermaid,    5m
 🧪Pester Tests                :done,           pester,   after escs,       10m
